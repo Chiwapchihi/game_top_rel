@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content%}
+
+
+<div class="profile-container">
+        <img src="{{ user.avatar(128) }}" alt="Аватар пользователя" class="avatar">
+        <h1>{{ user.username }}</h1>
+    </div>
+
+{% endblock %}

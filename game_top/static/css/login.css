@@ -1,0 +1,103 @@
+:root {
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --accent: #6366f1;
+    --accent-light: #818cf8;
+    --text-primary: #e2e8f0;
+    --text-secondary: #94a3b8;
+    --card-bg: rgba(30, 41, 59, 0.9);
+}
+
+.login-form {
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.login-form h1 {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.login-form p {
+    margin-bottom: 1rem;
+}
+
+.login-form label {
+    display: block;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.login-form input[type="text"],
+.login-form input[type="password"] {
+    width: 100%;
+    padding: 0.75rem;
+    background: var(--bg-secondary);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+}
+
+.login-form input[type="text"]:focus,
+.login-form input[type="password"]:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+    outline: none;
+}
+
+.login-form span {
+    color: red;
+    font-size: 0.875rem;
+}
+
+.login-form input[type="submit"] {
+    width: 100%;
+    padding: 0.75rem;
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 1rem;
+}
+
+.login-form input[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+}
+
+.login-form a {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.login-form a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .login-form {
+        padding: 1.5rem;
+    }
+
+    .login-form h1 {
+        font-size: 1.5rem;
+    }
+}
