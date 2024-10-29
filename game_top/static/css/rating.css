@@ -136,6 +136,7 @@
     font-size: 1.6rem;
     font-weight: 600;
     padding: 0 0.5rem;
+
 }
 
 .rating-page input[type="submit"] {
@@ -156,21 +157,48 @@
     box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
 }
 
+/* Base styling for score circle */
 .rating-page .score-circle {
+    font-size: 4.0rem;
+    border-radius: 50%;
     width: 200px;
     height: 200px;
-    border-radius: 50%;
     display: flex;
-    align-items: center;
     justify-content: center;
-    font-size: 4.0rem;
-    font-weight: 700;
-    color: white;
-    margin: 1rem auto;
-    background: var(--accent);
+    align-items: center;
     position: relative;
+    background: var(--accent);
     box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    transition: background-color 0.4s ease, transform 0.4s ease;
 }
+
+/* Styles for different score levels */
+.score-circle.low-score {
+    background-color: #EF4444; /* Red for low scores */
+}
+
+.score-circle.medium-score {
+    background-color: #F59E0B; /* Orange for medium scores */
+}
+
+.score-circle.high-score {
+    background-color: #10B981; /* Green for high scores */
+}
+
+/* Special styling for a perfect score */
+.score-circle.perfect-score {
+    background-color: gold;
+    transform: scale(1.1); /* Slightly larger for emphasis */
+}
+
+/* Crown icon for perfect score */
+.score-circle.perfect-score::after {
+    content: "👑";
+    position: absolute;
+    top: -20px;
+    font-size: 32px;
+}
+
 
 @media (max-width: 768px) {
     .rating-page .container-rate {
@@ -287,4 +315,11 @@
 
 .modal-content::-webkit-scrollbar-thumb:hover {
     background: #555;
+}
+
+ h3 {
+    color: #fff;
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 12px;
 }

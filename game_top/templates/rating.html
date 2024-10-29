@@ -95,59 +95,70 @@
     </div>
 <form method="post">
 <div class="criteria-name">
-            <label>Название игры:</label>
+            <h3>Название игры:</h3>
             {{ form.game_name() }}
         </div>
     <div class="criteria-container">
+    <div class="criteria">
+    <h3>Оригинальность:</h3>
+    {{ form.originality() }} {{ form.hidden_tag() }}
+    <span id="originalityValue">{{ form.originality.data }}</span>
+    <p id="originality-description"></p>
+</div>
+
+<div class="criteria">
+    <h3>Геймплей:</h3>
+    {{ form.gameplay() }} {{ form.hidden_tag() }}
+    <span id="gameplayValue">{{ form.gameplay.data }}</span>
+    <p id="gameplay-description"></p>
+</div>
             <div class="criteria">
-                <label> Оригинальность:</label>
-                {{ form.originality() }} {{ form.hidden_tag() }}
-                <span id="originalityValue"> {{ form.originality.data }}</span>
-            </div>
-            <div class="criteria">
-                <label> Геймплей:</label>
-                {{ form.gameplay() }} {{ form.hidden_tag() }}
-                <span id="gameplayValue"> {{ form.gameplay.data }}</span>
-            </div>
-            <div class="criteria">
-                <label> Сюжет:</label>
+                <h3> Сюжет:</h3>
                 {{ form.story() }} {{ form.hidden_tag() }}
                 <span id="storyValue"> {{ form.story.data }}</span>
+                <p id="story-description"></p>
             </div>
             <div class="criteria">
-                <label> Техническое состояние:</label>
+                <h3> Техническое состояние:</h3>
                 {{ form.bugs() }} {{ form.hidden_tag() }}
                 <span id="bugsValue"> {{ form.bugs.data }}</span>
+                <p id="bugs-description"></p>
             </div>
             <div class="criteria">
-                <label> Графика/виз.стиль:</label>
+                <h3> Графика/виз.стиль:</h3>
                 {{ form.graphics() }} {{ form.hidden_tag() }}
                 <span id="graphicsValue"> {{ form.graphics.data }}</span>
+                <p id="graphics-description"></p>
             </div>
             <div class="criteria">
-                <label> Звуки:</label>
+                <h3> Звуки:</h3>
                 {{ form.sound() }} {{ form.hidden_tag() }}
                 <span id="soundValue"> {{ form.sound.data }}</span>
+                <p id="sound-description"></p>
             </div>
             <div class="criteria">
-                <label> Музыка:</label>
+                <h3> Музыка:</h3>
                 {{ form.music() }} {{ form.hidden_tag() }}
                 <span id="musicValue"> {{ form.music.data }}</span>
+                <p id="music-description"></p>
             </div>
             <div class="criteria">
-                <label> Дизайн:</label>
+                <h3> Дизайн:</h3>
                 {{ form.design() }} {{ form.hidden_tag() }}
                 <span id="designValue"> {{ form.design.data }}</span>
+                <p id="design-description"></p>
             </div>
             <div class="criteria">
-                <label> Атмосфера:</label>
+                <h3> Атмосфера:</h3>
                 {{ form.atmosphere() }} {{ form.hidden_tag() }}
                 <span id="atmosphereValue"> {{ form.atmosphere.data }}</span>
+                <p id="atmosphere-description"></p>
             </div>
         <div class="criteria">
-                <label> Общее впечатление:</label>
+                <h3> Общее впечатление:</h3>
                 {{ form.general_impression() }} {{ form.hidden_tag() }}
                 <span id="general_impressionValue"> {{ form.general_impression.data }}</span>
+            <p id="general_impression-description"></p>
             </div>
     </div>
     {{ form.submit() }}
@@ -158,18 +169,138 @@
 
 
 <script>
-// Оптимизированная функция обновления значений
-function updateValue(element) {
+// Объект с описаниями для каждого критерия
+const criteriaDescriptions = {
+    originality: {
+        '0-2': 'Полное копирование существующих механик без каких-либо изменений. Клон популярной игры без собственных идей.',
+        '3-4': 'Минимальные изменения существующих механик. Комбинация известных элементов без значительных инноваций.',
+        '5-6': 'Интересные вариации на известные механики. Несколько свежих идей в рамках устоявшегося жанра.',
+        '7-8': 'Существенные инновации в рамках жанра. Оригинальные механики и свежий подход к известным элементам.',
+        '9-10': 'Революционные идеи или идеи, создающие новый поджанр/жанр. Уникальные механики, не имеющие прямых аналогов.'
+    },
+    gameplay: {
+        '0-2': 'Нефункциональные или плохо реализованные механики. Полное отсутствие баланса.',
+        '3-4': 'Базовые механики работают, но они однообразны. Существенные проблемы с балансом.',
+        '5-6': 'Механики работают хорошо, но могут быть однообразными. Баланс требует доработки, но игра проходима.',
+        '7-8': 'Разнообразные, хорошо проработанные механики. Качественный баланс с минимальными недочетами.',
+        '9-10': 'Безупречно работающие, многогранные механики. Идеальный баланс всех игровых элементов.'
+    },
+    story: {
+        '0-2': 'Отсутствие связного повествования. Бессмысленный или противоречивый сюжет.',
+        '3-4': 'Примитивный, шаблонный сюжет. Слабая проработка персонажей и мира.',
+        '5-6': 'Стандартный, но качественный сюжет. Достаточная проработка основных элементов.',
+        '7-8': 'Увлекательное повествование с хорошо прописанными персонажами и миром.',
+        '9-10': 'Выдающийся, многослойный сюжет. Глубокая проработка всех элементов повествования.'
+    },
+    bugs: {
+        '0-2': 'Критические баги, делающие игру непроходимой. Частые вылеты и зависания.',
+        '3-4': 'Множество заметных багов. Серьезные проблемы с производительностью.',
+        '5-6': 'Несколько заметных багов. Средняя оптимизация.',
+        '7-8': 'Минимальное количество некритичных багов. Хорошая оптимизация.',
+        '9-10': 'Отсутствие заметных багов. Безупречная оптимизация.'
+    },
+    graphics: {
+        '0-2': 'Визуально непривлекательная графика/Отсутствие целостного стиля.',
+        '3-4': 'Устаревшая или некачественная графика/Базовый, неоригинальный стиль.',
+        '5-6': 'Приемлемое качество графики/Последовательный, хотя и не выдающийся стиль.',
+        '7-8': 'Качественная графика/Привлекательный и оригинальный визуальный стиль.',
+        '9-10': 'Исключительное качество графики/Уникальный, запоминающийся стиль.'
+    },
+    sound: {
+        '0-2': 'Некачественные или отсутствующие звуковые эффекты. Плохая озвучка.',
+        '3-4': 'Базовые звуковые эффекты. Посредственная озвучка.',
+        '5-6': 'Качественные базовые звуки. Приемлемая озвучка.',
+        '7-8': 'Разнообразные, качественные звуки. Хорошая озвучка.',
+        '9-10': 'Исключительное качество всех звуковых элементов. Выдающаяся озвучка.'
+    },
+    music: {
+        '0-2': 'Раздражающая или неуместная музыка. Очень ограниченный набор композиций.',
+        '3-4': 'Посредственный саундтрек. Малое разнообразие композиций.',
+        '5-6': 'Приятная, но не запоминающаяся музыка. Достаточное разнообразие.',
+        '7-8': 'Качественный саундтрек, усиливающий атмосферу игры.',
+        '9-10': 'Выдающийся саундтрек, становящийся неотъемлемой частью игрового опыта.'
+    },
+    design: {
+        '0-2': 'Непродуманный геймдизайн. Плохой левел-дизайн. Неудобный интерфейс.',
+        '3-4': 'Базовый геймдизайн. Простой левел-дизайн. Функциональный, но неудобный UI.',
+        '5-6': 'Хороший базовый дизайн во всех аспектах, но без особых достоинств.',
+        '7-8': 'Качественный дизайн во всех аспектах. Продуманная структура и удобный UI.',
+        '9-10': 'Исключительный дизайн во всех аспектах, создающий безупречный игровой опыт.'
+    },
+    atmosphere: {
+        '0-2': 'Отсутствие атмосферы. Разрозненные элементы не создают целостного впечатления.',
+        '3-4': 'Слабая атмосфера. Элементы плохо работают вместе.',
+        '5-6': 'Ощутимая атмосфера. Большинство элементов работают согласованно.',
+        '7-8': 'Сильная, захватывающая атмосфера. Отличное взаимодействие всех элементов.',
+        '9-10': 'Незабываемая атмосфера, полностью погружающая игрока в игровой мир.'
+    },
+    general_impression: {
+        '0-2': 'Крайне негативное впечатление. Игра не достигает ни одной из поставленных целей.',
+        '3-4': 'Слабое впечатление. Игра едва достигает минимальных целей.',
+        '5-6': 'Нейтральное или умеренно положительное впечатление. Игра достигает базовых целей.',
+        '7-8': 'Сильное положительное впечатление. Игра успешно достигает большинства целей.',
+        '9-10': 'Исключительное впечатление. Игра превосходит ожидания и оставляет яркое послевкусие.'
+    }
+};
+
+// Функция для получения диапазона значения
+function getValueRange(value) {
+    if (value <= 2) return '0-2';
+    if (value <= 4) return '3-4';
+    if (value <= 6) return '5-6';
+    if (value <= 8) return '7-8';
+    return '9-10';
+}
+
+// Функция обновления значений
+function updateValue(element, isAutoUpdate = false) {
     const id = element.id + "Value";
     const valueElement = document.getElementById(id);
     const newValue = parseInt(element.value);
 
-    // Быстрое обновление значения без анимации для улучшения производительности
+    // Обновляем числовое значение
     valueElement.innerText = newValue;
+
+    // Обновляем текстовое описание
+    const descriptionElement = document.querySelector(`#${element.id}-description`);
+    if (descriptionElement && criteriaDescriptions[element.id]) {
+        const range = getValueRange(newValue);
+        descriptionElement.innerText = criteriaDescriptions[element.id][range];
+    }
+
+    // Если изменение не было вызвано автоматическим обновлением атмосферы
+    // и изменился один из компонентов атмосферы, обновляем значение атмосферы
+    if (!isAutoUpdate && ['graphics', 'sound', 'music', 'story'].includes(element.id)) {
+        updateAtmosphere();
+    }
+
     updateTotalScore();
 }
 
-// Оптимизированная функция подсчета общего балла
+// Функция автоматического обновления атмосферы
+function updateAtmosphere() {
+    const graphics = parseInt(document.getElementById('graphics').value || 0);
+    const sound = parseInt(document.getElementById('sound').value || 0);
+    const music = parseInt(document.getElementById('music').value || 0);
+    const story = parseInt(document.getElementById('story').value || 0);
+
+    // Вычисляем среднее значение и округляем до целого числа
+    const atmosphereValue = Math.round((graphics + sound + music + story) / 4);
+
+    // Получаем элемент слайдера атмосферы
+    const atmosphereSlider = document.getElementById('atmosphere');
+
+    // Устанавливаем новое значение
+    atmosphereSlider.value = atmosphereValue;
+
+    // Обновляем отображение значения, передавая true чтобы избежать рекурсии
+    updateValue(atmosphereSlider, true);
+
+    // Делаем слайдер атмосферы неактивным
+    atmosphereSlider.disabled = true;
+}
+
+// Функция обновления общего счета
 function updateTotalScore() {
     const criteria = [
         'originality', 'gameplay', 'story', 'bugs',
@@ -184,48 +315,75 @@ function updateTotalScore() {
     const scoreElement = document.getElementById('totalScore');
     scoreElement.innerText = totalScore;
 
-    // Определяем цвет на основе процента
     const maxScore = criteria.length * 10;
     const percentage = (totalScore / maxScore) * 100;
 
-    scoreElement.style.background = percentage >= 70 ? '#10B981'
-                                 : percentage >= 40 ? '#F59E0B'
-                                 : '#EF4444';
+    // Удаляем предыдущие классы
+    scoreElement.classList.remove('low-score', 'medium-score', 'high-score', 'perfect-score');
+
+    // Применяем соответствующий класс в зависимости от оценки
+    if (totalScore === maxScore) {
+        scoreElement.classList.add('perfect-score');
+    } else if (percentage >= 70) {
+        scoreElement.classList.add('high-score');
+    } else if (percentage >= 40) {
+        scoreElement.classList.add('medium-score');
+    } else {
+        scoreElement.classList.add('low-score');
+    }
 }
 
-// Инициализация при загрузке
+// Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {
     const ranges = document.querySelectorAll('input[type="range"]');
-    ranges.forEach(updateValue);
+    ranges.forEach(range => {
+        // Добавляем обработчик события input для каждого слайдера
+        range.addEventListener('input', () => updateValue(range));
+        // Инициализируем начальные значения
+        updateValue(range);
+    });
 
     // Добавляем плавное появление
     const container = document.querySelector('.container-rate');
-    container.style.opacity = '0';
-    requestAnimationFrame(() => {
-        container.style.transition = 'opacity 0.3s ease';
-        container.style.opacity = '1';
-    });
-});
+    if (container) {
+        container.style.opacity = '0';
+        requestAnimationFrame(() => {
+            container.style.transition = 'opacity 0.3s ease';
+            container.style.opacity = '1';
+        });
+    }
 
-    document.addEventListener('DOMContentLoaded', function() {
+    // Делаем слайдер атмосферы неактивным при загрузке
+    const atmosphereSlider = document.getElementById('atmosphere');
+    if (atmosphereSlider) {
+        atmosphereSlider.disabled = true;
+        // Инициализируем начальное значение атмосферы
+        updateAtmosphere();
+    }
+
+    // Инициализация модального окна
     const helpIcon = document.querySelector('.help-icon');
     const modal = document.querySelector('.modal');
     const closeBtn = document.querySelector('.close-btn');
 
-    helpIcon.addEventListener('click', () => {
-        modal.style.display = 'block';
-    });
+    if (helpIcon && modal && closeBtn) {
+        helpIcon.addEventListener('click', () => {
+            modal.style.display = 'block';
+        });
 
-    closeBtn.addEventListener('click', () => {
-        modal.style.display = 'none';
-    });
-
-    window.addEventListener('click', (e) => {
-        if (e.target === modal) {
+        closeBtn.addEventListener('click', () => {
             modal.style.display = 'none';
-        }
-    });
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    }
 });
+
+
 </script>
 
 
